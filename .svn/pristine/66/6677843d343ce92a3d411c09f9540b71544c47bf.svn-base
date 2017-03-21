@@ -1,0 +1,48 @@
+//
+//  Utility.m
+//  Virtual Mall
+//
+//  Created by Aditya Kumar on 06/03/17.
+//  Copyright © 2017 mindfire. All rights reserved.
+//
+#import "Utility.h"
+#import "Define.h"
+#import "LoginPageViewController.h"
+
+@implementation Utility
+
++ (NSString*) getDcoumentDirectoryPath
+{
+    //To BE DONE
+    return @"";
+}
+
+
++ (BOOL) validateEmail:(NSString*) emailString
+{
+    NSString* emailRegex = kEmailRegex;
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:emailString];
+}
+
+
++ (void) promptErrorMessage:(NSString*)message sender:(UIViewController*)sender
+{
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Alert!" message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:ok];
+    [sender presentViewController:alert animated:YES completion:nil];
+}
+
+
+//Retrieve path For given NAME
++ (NSString*) retrievePathForNameInDocumentDirectory:(NSString*) fileName
+{
+    NSArray   *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString  *docDirectory = [paths objectAtIndex:0];
+    NSString  *filePath = [docDirectory stringByAppendingPathComponent:fileName];
+    return filePath;
+}
+
+@end

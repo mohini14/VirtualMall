@@ -1,0 +1,76 @@
+//
+//  HomePageViewController.m
+//  Virtual Mall
+//
+//  Created by Aditya Kumar on 10/03/17.
+//  Copyright © 2017 mindfire. All rights reserved.
+//
+#import "SWRevealViewController.h"
+#import "ShopTableViewCell.h"
+#import "HomePageViewController.h"
+
+@interface HomePageViewController () <UITableViewDelegate, UITableViewDataSource>
+
+@end
+
+@implementation HomePageViewController
+
+- (void) viewDidLoad
+{
+    [super viewDidLoad];
+    [self setSliderBarButtonProperty];
+    [self setButtonsAppearance];
+}
+
+- (void) didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+
+- (void) setSliderBarButtonProperty
+{
+    SWRevealViewController *revealViewController = self.revealViewController;
+    if ( revealViewController )
+    {
+        [self.sliderBarButton setTarget: self.revealViewController];
+        [self.sliderBarButton setAction: @selector( revealToggle: )];
+        [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
+    }
+}
+
+- (void) setButtonsAppearance
+{
+    self.searchButton.layer.cornerRadius = self.searchButton.bounds.size.height*0.5;
+    self.searchButton.backgroundColor = [UIColor colorWithRed:0.816 green:0.294 blue:0.298 alpha:1.0];
+}
+
+#pragma  mark - UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 10;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* sCellIdentifiers = @"shopTableCell";
+    ShopTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:sCellIdentifiers];
+    if(cell == nil)
+    {
+        NSArray* tableCell = [[NSBundle mainBundle]loadNibNamed:@"ShopTableViewCell" owner:nil options:nil];
+        cell = [tableCell objectAtIndex:0];
+    }
+    [tableView setRowHeight:cell.frame.size.height];
+    return cell;
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

@@ -1,0 +1,160 @@
+//
+//  RegistrationViewController.m
+//  Virtual Mall
+//
+//  Created by Mohini Sindhu  on 14/03/17.
+//  Copyright © 2017 mindfire. All rights reserved.
+//
+
+#import "RegistrationViewController.h"
+
+#define kStatusArrayCapacity 5
+#define kFirstNameLabelTitle @"'First Name' "
+#define kLastNameLabelTitle @"'Last Name' "
+#define kEmailLabelTitle @"'Email' "
+#define kContactLabelTitle @"'Contact' "
+#define kPasswordLabelTitle @"'Password' "
+#define kSignUpSuccessfullMessage @"SignUp Succesfully"
+#define kCheckBoxSelectedImage @"CheckBoxSelected.png"
+#define kCheckBoxUnselectedImage @"checkBoxUnselected.jpg"
+
+@interface RegistrationViewController ()
+
+@end
+
+@implementation RegistrationViewController
+{
+	BOOL checked;
+}
+
+#pragma mark - Initial VC setup.
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	[self setUpVC];
+}
+
+- (void)didReceiveMemoryWarning
+{
+	[super didReceiveMemoryWarning];
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
+	checked=NO;
+	[super viewWillAppear:animated];
+	[self setborderColor];
+}
+
+-(void) setUpVC
+{
+	checked=NO;
+	[self.sellerCheckBox setImage:[UIImage imageNamed:kCheckBoxUnselectedImage] forState:UIControlStateNormal];
+	[self setborderColor];
+	[self setUpTextFieldDelegates];
+}
+
+-(void) setUpTextFieldDelegates
+{
+	self.firstName.delegate=self;
+	self.lastName.delegate=self;
+	self.contact.delegate=self;
+	self.email.delegate=self;
+	self.password.delegate=self;
+	self.confirmPassword.delegate=self;
+}
+
+- (void) setborderColor
+{
+	self.firstName.layer.borderColor = [UIColor colorWithRed:0.667 green:0.667 blue:0.667 alpha:1.0].CGColor;
+	self.lastName.layer.borderColor = [UIColor colorWithRed:0.667 green:0.667 blue:0.667 alpha:1.0].CGColor;
+	self.contact.layer.borderColor = [UIColor colorWithRed:0.667 green:0.667 blue:0.667 alpha:1.0].CGColor;
+	self.password.layer.borderColor = [UIColor colorWithRed:0.667 green:0.667 blue:0.667 alpha:1.0].CGColor;
+	self.email.layer.borderColor = [UIColor colorWithRed:0.667 green:0.667 blue:0.667 alpha:1.0].CGColor;
+	self.confirmPassword.layer.borderColor = [UIColor colorWithRed:0.667 green:0.667 blue:0.667 alpha:1.0].CGColor;
+}
+
+
+
+#pragma mark - UITextField Delegates
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+	if ([textField canResignFirstResponder])
+	{
+		[textField resignFirstResponder];
+	}
+	return YES;
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+	return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+	if(textField.tag==4 || textField.tag==5 || textField.tag==6)
+	{
+	CGPoint scrollPoint = CGPointMake(0, textField.frame.origin.y);
+	[self.scrollView setContentOffset:scrollPoint animated:YES];
+	}
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+	[self.scrollView setContentOffset:CGPointZero animated:YES];
+}
+
+#pragma mark - Actions on Registration VC
+//method handles the action on checkbox
+- (IBAction)sellerCheckBoxPressed:(id)sender
+{
+	if(!checked)
+	{
+		[self.sellerCheckBox setImage:[UIImage imageNamed:kCheckBoxSelectedImage] forState:UIControlStateNormal];
+		checked=YES;
+	}
+	else
+	{
+		[self.sellerCheckBox setImage:[UIImage imageNamed:kCheckBoxUnselectedImage] forState:UIControlStateNormal];
+		checked=NO;
+	}
+}
+
+//method passes control to Login VC
+- (IBAction)alreadyHaveAccountButtonPressed:(UIButton *)sender
+{
+	[self.navigationController popViewControllerAnimated:YES];
+}
+
+//method handles actions on Sign Up button
+- (IBAction)signUpButtonPressed:(id)sender
+{
+	NSArray *labelarray = [NSArray arrayWithObjects:kFirstNameLabelTitle,kLastNameLabelTitle,kContactLabelTitle,kEmailLabelTitle,kPasswordLabelTitle,nil];
+	
+	//status array consists of status of Field validation in YES or NO
+	NSMutableArray *statusArray=[[NSMutableArray alloc]initWithCapacity:kStatusArrayCapacity];
+	
+	statusArray[0]=[Validator validateName:self.firstName.text];
+	statusArray[1]=[Validator validateName:self.lastName.text];
+	statusArray[2]=[Validator validateContact:self.contact.text];
+	statusArray[3]=[Validator validateEmail:self.email.text];
+	statusArray[4]=[Validator validatePassword:self.password.text withConfirmPassword:self.confirmPassword.text];
+	
+	for(int i=0 ;i < labelarray.count ; i++)
+	{
+		if([[statusArray[i] objectForKey:kValidKey] isEqualToString:kValidKeyNoValue])
+		{
+			NSString *str=[NSString append:labelarray[i] withSring:[statusArray[i] objectForKey:kReasonKey]];
+			
+			//displays the reason for inValidation of the particular Field
+			[AlertDisplay showAlertPopupWithTitle:str forView:self];
+			break;
+		}
+	}
+	[AlertDisplay showAlertPopupWithTitle:kSignUpSuccessfullMessage forView:self];
+}
+
+
+@end

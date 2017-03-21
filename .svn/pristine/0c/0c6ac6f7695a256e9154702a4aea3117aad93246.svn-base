@@ -1,0 +1,33 @@
+//
+//  Validator.h
+//  Virtual Mall
+//
+//  Created by Mohini Sindhu  on 14/03/17.
+//  Copyright © 2017 mindfire. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#define kValidKey @"Valid-Key"
+#define kReasonKey @"Reason-Key"
+#define kValidKeyNoValue @"NO"
+#define kValidKeyYesValue @"YES"
+#define kErrorFieldEmpty @" : Field is Empty"
+#define kEmptyFieldNotation @""
+#define kErrorMinLengthRequired @"Min length reqired is :"
+#define kErrorMaxLengthRequired @"Max length reqired is :"
+#define kErrorImproperFormat @"Not a proper Format :"
+#define kErrorPasswordConfimPasswordMismatch @" doesnot Match with Confirm password Field"
+
+
+@interface Validator : NSObject
+
++(NSDictionary *) validateName :(NSString *)name;
++(NSDictionary *) validateEmail :(NSString *)email;
++(NSDictionary *) validateContact :(NSString *)contactNumber;
++(NSDictionary *) validatePassword :(NSString *)password withConfirmPassword :(NSString *)confrimPassword;
+
+
+
+
+@end
